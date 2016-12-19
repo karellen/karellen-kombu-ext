@@ -22,7 +22,7 @@ use_plugin("pypi:karellen_pyb_plugin", ">=0.0.1.dev")
 use_plugin("copy_resources")
 
 name = "karellen-kombu-ext"
-version = "4.0.2"
+version = "4.0.3.dev"
 
 url = "https://github.com/karellen/karellen-kombu-ext"
 description = "Please visit %s for more information!" % url
