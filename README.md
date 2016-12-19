@@ -17,11 +17,10 @@ This project recovered the brokers for
 
 ## Transport Comparison
 
-
-  | Client | Type | Direct | Topic | Fanout | Priority | TTL |
-  | --- | --- | --- | --- | --- | --- | --- |
-  | django     | Virtual | Yes  |  Yes * | No | No | No |
-  | sqlalchemy | Virtual | Yes | Yes * | No | No | No |
+| Client | Type | Direct | Topic | Fanout | Priority | TTL |
+| --- | --- | --- | --- | --- | --- | --- |
+| django | Virtual | Yes  | Yes * | No | No | No |
+| sqlalchemy | Virtual | Yes | Yes * | No | No | No |
 
 \* Declarations only kept in memory, so exchanges/queues must be declared by all clients that needs them.
 
