@@ -15,7 +15,7 @@ class Queue(models.Model):
 
     class Meta:
         if django.VERSION >= (1, 7):
-            app_label = 'kombu_transport_django'
+            app_label = 'karellen_kombu_transport_django'
         db_table = 'djkombu_queue'
         verbose_name = _('queue')
         verbose_name_plural = _('queues')
@@ -32,7 +32,7 @@ class Message(models.Model):
 
     class Meta:
         if django.VERSION >= (1, 7):
-            app_label = 'kombu_transport_django'
+            app_label = 'karellen_kombu_transport_django'
         db_table = 'djkombu_message'
         verbose_name = _('message')
         verbose_name_plural = _('messages')

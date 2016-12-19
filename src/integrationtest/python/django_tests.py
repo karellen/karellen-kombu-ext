@@ -1,18 +1,19 @@
 from __future__ import absolute_import, unicode_literals
 
+import sys
+
 from funtests import transport
+from karellen.kombu import register_transports
 
-from kombu.tests.case import mock, skip
+register_transports()
 
 
-@skip.unless_module('django')
 class test_django(transport.TransportCase):
     transport = 'django'
     prefix = 'django'
     event_loop_max = 10
 
-    @mock.stdouts
-    def before_connect(self, stdout, stderr):
+    def before_connect(self, stdout=sys.stdout, stderr=sys.stderr):
         from django.conf import settings
         if not settings.configured:
             settings.configure(
@@ -24,7 +25,15 @@ class test_django(transport.TransportCase):
                         'NAME': ':memory:',
                     },
                 },
-                INSTALLED_APPS=('kombu.transport.django',),
+                INSTALLED_APPS=('karellen.kombu.transport.django',),
             )
+
+        from django import setup, VERSION
+        setup()
+
         from django.core.management import call_command
-        call_command('syncdb')
+        if VERSION > (1, 8):
+            call_command('makemigrations')
+            call_command('migrate')
+        else:
+            call_command('syncdb')

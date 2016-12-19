@@ -3,22 +3,21 @@ from __future__ import absolute_import, print_function, unicode_literals
 import random
 import socket
 import string
-import sys
 import time
-import unittest2 as unittest
 import warnings
 import weakref
+from hashlib import sha256 as _digest
+from unittest.case import SkipTest
 
-from case.skip import SkipTest
-
+import unittest2 as unittest
 from kombu import Connection
 from kombu import Exchange, Queue
 from kombu.five import range
 
-if sys.version_info >= (2, 5):
-    from hashlib import sha256 as _digest
-else:
-    from sha import new as _digest  # noqa
+try:
+    type(buffer)
+except NameError:
+    buffer = memoryview
 
 
 def _nobuf(x):
@@ -161,16 +160,18 @@ class TransportCase(unittest.TestCase):
                 purged += self.purge_consumer(consumer)
 
     def _digest(self, data):
+        if not isinstance(data, bytes):
+            data = data.encode("ascii")
         return _digest(data).hexdigest()
 
     def test_produce__consume_large_messages(
             self, bytes=1048576, n=10,
-            charset=string.punctuation + string.letters + string.digits):
+            charset=string.punctuation + string.ascii_letters + string.digits):
         if not self.verify_alive():
             return
         bytes = min(x for x in [bytes, self.message_size_limit] if x)
         messages = [''.join(random.choice(charset)
-                    for j in range(bytes)) + '--%s' % n
+                            for j in range(bytes)) + '--%s' % n
                     for i in range(n)]
         digests = []
         chan1 = self.connection.channel()

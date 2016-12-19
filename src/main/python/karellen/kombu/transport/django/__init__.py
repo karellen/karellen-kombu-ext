@@ -3,7 +3,6 @@ from __future__ import absolute_import, unicode_literals
 
 from django.conf import settings
 from django.core import exceptions as errors
-
 from kombu.five import Empty
 from kombu.transport import virtual
 from kombu.utils import cached_property, symbol_by_name
@@ -17,20 +16,23 @@ except ImportError:  # pragma: no cover
     pass
 else:
     class KombuAppConfig(AppConfig):
-        name = 'kombu.transport.django'
+        name = 'karellen.kombu.transport.django'
         label = name.replace('.', '_')
         verbose_name = 'Message queue'
-    default_app_config = 'kombu.transport.django.KombuAppConfig'
+    default_app_config = 'karellen.kombu.transport.django.KombuAppConfig'
 
 VERSION = (1, 0, 0)
 __version__ = '.'.join(map(str, VERSION))
 
-POLLING_INTERVAL = getattr(settings, 'KOMBU_POLLING_INTERVAL',
-                           getattr(settings, 'DJKOMBU_POLLING_INTERVAL', 5.0))
-
+try:
+    POLLING_INTERVAL = getattr(settings, 'KOMBU_POLLING_INTERVAL',
+                               getattr(settings, 'DJKOMBU_POLLING_INTERVAL', 5.0))
+except errors.ImproperlyConfigured:
+    POLLING_INTERVAL = 5.0
+    settings.configure()
 
 class Channel(virtual.Channel):
-    queue_model = 'kombu.transport.django.models:Queue'
+    queue_model = 'karellen.kombu.transport.django.models:Queue'
 
     def _new_queue(self, queue, **kwargs):
         self.Queue.objects.get_or_create(name=queue)
@@ -39,8 +41,8 @@ class Channel(virtual.Channel):
         self.Queue.objects.publish(queue, dumps(message))
 
     def basic_consume(self, queue, *args, **kwargs):
-        qinfo = self.state.bindings[queue]
-        exchange = qinfo[0]
+        qinfo = self.state.queue_bindings(queue)
+        exchange = next(qinfo)
         if self.typeof(exchange).type == 'fanout':
             return
         super(Channel, self).basic_consume(queue, *args, **kwargs)

@@ -1,11 +1,11 @@
 from __future__ import absolute_import, unicode_literals
 
 from funtests import transport
+from karellen.kombu import register_transports
 
-from kombu.tests.case import skip
+register_transports()
 
 
-@skip.unless_module('sqlalchemy')
 class test_sqla(transport.TransportCase):
     transport = 'sqlalchemy'
     prefix = 'sqlalchemy'

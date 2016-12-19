@@ -46,6 +46,6 @@ class Migration(migrations.Migration):
             model_name='message',
             name='queue',
             field=models.ForeignKey(
-                related_name='messages', to='kombu_transport_django.Queue'),
+                related_name='messages', to='karellen_kombu_transport_django.Queue'),
         ),
     ]

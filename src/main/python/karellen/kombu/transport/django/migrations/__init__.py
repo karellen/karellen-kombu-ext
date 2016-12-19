@@ -5,7 +5,7 @@ For South support, customize the SOUTH_MIGRATION_MODULES setting
 to point to the correct migrations module:
 
     SOUTH_MIGRATION_MODULES = {
-        'kombu_transport_django': 'kombu.transport.django.south_migrations',
+        'karellen_kombu_transport_django': 'karellen.kombu.transport.django.south_migrations',
     }
 """
 
