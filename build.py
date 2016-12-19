@@ -62,8 +62,11 @@ def set_properties(project: Project):
 
     project.set_property("pybuilder_header_plugin_break_build", False)
 
-    project.set_property("copy_resources_target", "$dir_dist")
-    project.get_property("copy_resources_glob").append("LICENSE")
+    project.set_property("copy_resources_target", "$dir_dist/karellen")
+    project.get_property("copy_resources_glob").append("LICENSE.bsd3")
+    project.get_property("copy_resources_glob").append("LICENSE.apache")
+    project.include_file("karellen", "LICENSE.bsd3")
+    project.include_file("karellen", "LICENSE.apache")
 
     # Distutils
     project.set_property("distutils_classifiers", project.get_property("distutils_classifiers") + [
