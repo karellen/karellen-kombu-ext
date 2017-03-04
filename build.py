@@ -43,6 +43,8 @@ def set_properties(project: Project):
 
     project.build_depends_on("sqlalchemy")
     project.build_depends_on("django")
+    project.build_depends_on("karellen-sqlite", "~=0.0.0")
+    project.build_depends_on("unittest2")
 
     # Cram Configuration
     project.set_property("cram_fail_if_no_tests", False)
